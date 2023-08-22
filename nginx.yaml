@@ -1,0 +1,32 @@
+---
+- name: Install Nginx
+  hosts: your_target_server
+  become: yes  # This enables privilege escalation to run tasks as sudo/root
+  tasks:
+    - name: Update apt package cache (for Debian/Ubuntu)
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"  # Only run on Debian/Ubuntu systems
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+      when: ansible_os_family == "Debian"  # Only run on Debian/Ubuntu systems
+
+    - name: Update yum package cache (for CentOS/RHEL)
+      yum:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat"  # Only run on CentOS/RHEL systems
+
+    - name: Install Nginx (for CentOS/RHEL)
+      yum:
+        name: nginx
+        state: present
+      when: ansible_os_family == "RedHat"  # Only run on CentOS/RHEL systems
+
+    - name: Start Nginx service
+      service:
+        name: nginx
+        state: started
