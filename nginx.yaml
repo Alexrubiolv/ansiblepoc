@@ -1,32 +1,41 @@
 ---
-- name: Install Nginx
+- name: Configure Ubuntu Server
   hosts: 4.180.123.56
-  become: yes  # This enables privilege escalation to run tasks as sudo/root
+  become: yes
+
   tasks:
-    - name: Update apt package cache (for Debian/Ubuntu)
+    - name: Update apt cache
       apt:
         update_cache: yes
-      when: ansible_os_family == "Debian"  # Only run on Debian/Ubuntu systems
+      tags:
+        - update
 
-    - name: Install Nginx
+    - name: Upgrade all packages
       apt:
-        name: nginx
-        state: present
-      when: ansible_os_family == "Debian"  # Only run on Debian/Ubuntu systems
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+      tags:
+        - update
 
-    - name: Update yum package cache (for CentOS/RHEL)
-      yum:
-        name: "*"
-        state: latest
-      when: ansible_os_family == "RedHat"  # Only run on CentOS/RHEL systems
-
-    - name: Install Nginx (for CentOS/RHEL)
-      yum:
-        name: nginx
+    - name: Install Git, Nginx, and libraries
+      apt:
+        name: "{{ packages }}"
         state: present
-      when: ansible_os_family == "RedHat"  # Only run on CentOS/RHEL systems
+      vars:
+        packages:
+          - git
+          - nginx
+          - libssl-dev
+          - libffi-dev
+          - python3-dev
+          - python3-pip
+      tags:
+        - install
 
     - name: Start Nginx service
       service:
         name: nginx
         state: started
+      tags:
+        - start
