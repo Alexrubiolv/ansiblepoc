@@ -1,6 +1,6 @@
 ---
 - name: Install Nginx
-  hosts: your_target_server
+  hosts: 4.180.123.56
   become: yes  # This enables privilege escalation to run tasks as sudo/root
   tasks:
     - name: Update apt package cache (for Debian/Ubuntu)
