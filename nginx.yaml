@@ -1,41 +1,15 @@
 ---
-- name: Configure Ubuntu Server
-  hosts: 10.0.0.4
-  become: yes
-
+- name: Print "Hello World" on VM via Bastion
+  hosts: localhost  # Connect to the bastion host from the Ansible control machine
+  gather_facts: no
   tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
-      tags:
-        - update
+    - name: Establish SSH tunnel through bastion to VM
+      ansible.builtin.shell: ssh -o ProxyCommand="ssh -W %h:%p ansible@20.16.249.118" ansible@10.0.0.4
+      environment:
+        ANSIBLE_SSH_ARGS: "-o StrictHostKeyChecking=no"  # Optional, for host key checking
 
-    - name: Upgrade all packages
-      apt:
-        upgrade: dist
-        autoremove: yes
-        autoclean: yes
-      tags:
-        - update
-
-    - name: Install Git, Nginx, and libraries
-      apt:
-        name: "{{ packages }}"
-        state: present
-      vars:
-        packages:
-          - git
-          - nginx
-          - libssl-dev
-          - libffi-dev
-          - python3-dev
-          - python3-pip
-      tags:
-        - install
-
-    - name: Start Nginx service
-      service:
-        name: nginx
-        state: started
-      tags:
-        - start
+- name: Print "Hello World" on VM
+  hosts: 10.0.0.4
+  tasks:
+    - name: Print "Hello World"
+      ansible.builtin.command: echo "Hello World"
