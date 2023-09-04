@@ -3,4 +3,4 @@
   hosts: 10.0.0.4
   tasks:
     - name: Print "Hello World"
-      ansible.builtin.command: echo "Hello World"
+      ansible.builtin.command: echo "Hello World" 
