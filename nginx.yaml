@@ -1,6 +1,9 @@
 ---
-- name: Print "Hello World" on Ubuntu Server
-  hosts: 10.0.0.4
+- name: Say Hello to the World
+  hosts: 10.0.0.4  # Replace with the IP address or hostname of your remote host
+  remote_user: azurepoc  # Replace with the desired SSH username
+
   tasks:
-    - name: Print "Hello World"
-      ansible.builtin.command: echo "Hello World" 
+    - name: Print Hello World
+      debug:
+        msg: "Hello, World!"
