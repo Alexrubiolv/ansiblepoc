@@ -1,14 +1,5 @@
 ---
-- name: Print "Hello World" on VM via Bastion
-  hosts: localhost  # Connect to the bastion host from the Ansible control machine
-  gather_facts: no
-  tasks:
-    - name: Establish SSH tunnel through bastion to VM
-      ansible.builtin.shell: ssh -o ProxyCommand="ssh -W %h:%p ansible@20.16.249.118" ansible@10.0.0.4
-      environment:
-        ANSIBLE_SSH_ARGS: "-o StrictHostKeyChecking=no"  # Optional, for host key checking
-
-- name: Print "Hello World" on VM
+- name: Print "Hello World" on Ubuntu Server
   hosts: 10.0.0.4
   tasks:
     - name: Print "Hello World"
